@@ -54,6 +54,9 @@
         android:text="SUBMIT POST"
         android:background="@color/colorPrimary"
         android:layout_margin="10dp"
+        android:onClick="setBtnSubmitPost"
         android:textColor="@android:color/white"/>
+
+
 
 </RelativeLayout>

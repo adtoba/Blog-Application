@@ -1,5 +1,6 @@
 package com.example.user.blogapplication;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class NewPostActivity extends AppCompatActivity {
 
@@ -20,11 +27,13 @@ public class NewPostActivity extends AppCompatActivity {
     private EditText mPostTitle;
     private EditText mPostDesc;
     private Button mSubmitButton;
+    private ProgressDialog mProgress;
 
     // Uri
     private Uri imageUri = null;
 
     // Other references
+    private StorageReference mStorage;
 
 
     @Override
@@ -46,6 +55,12 @@ public class NewPostActivity extends AppCompatActivity {
         mPostTitle = (EditText) findViewById(R.id.post_title);
         mPostDesc = (EditText) findViewById(R.id.post_desc);
 
+        // Other references
+        mStorage = FirebaseStorage.getInstance().getReference();
+        mProgress = new ProgressDialog(this);
+
+
+
     }
 
 
@@ -60,10 +75,29 @@ public class NewPostActivity extends AppCompatActivity {
     }
 
     private void startPosting() {
+
+        mProgress.setMessage("Posting to Blog.....");
+        mProgress.show();
+
         String title_text = mPostTitle.getText().toString();
         String desc_text = mPostDesc.getText().toString();
 
         if (!TextUtils.isEmpty(title_text) && !TextUtils.isEmpty(desc_text) && imageUri != null) {
+
+            StorageReference filepath = mStorage.child("Blog-Images").child(imageUri.getLastPathSegment());
+            filepath.putFile(imageUri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                            mProgress.dismiss();
+
+                            Toast.makeText(NewPostActivity.this, "Successfully uploaded", Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    });
 
         }
 

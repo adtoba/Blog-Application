@@ -24,6 +24,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -63,8 +68,5 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
+
 }
