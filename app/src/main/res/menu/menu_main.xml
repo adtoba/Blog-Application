@@ -3,15 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_add"
         android:orderInCategory="100"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_add"
+        android:title="New Post"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="200"
         app:showAsAction="never"
         android:title="Settings"/>
 
     <item
-        android:id="@+id/action_add"
-        android:orderInCategory="200"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_add"
-        android:title="New Post"/>
+        android:id="@+id/action_logout"
+        android:orderInCategory="300"
+        app:showAsAction="never"
+        android:title="Log out"/>
+
+
 </menu>
