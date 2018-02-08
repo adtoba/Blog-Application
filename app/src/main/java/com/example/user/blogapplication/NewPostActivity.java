@@ -14,6 +14,8 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -32,8 +34,8 @@ public class NewPostActivity extends AppCompatActivity {
     // Uri
     private Uri imageUri = null;
 
-    // Other references
     private StorageReference mStorage;
+    private DatabaseReference mDatabase;
 
 
     @Override
@@ -47,20 +49,16 @@ public class NewPostActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("New Post");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Button references
+        // Widget references
         mImageButton = (ImageButton) findViewById(R.id.add_image);
         mSubmitButton = (Button) findViewById(R.id.btn_submit);
-
-        // Edittext references
         mPostTitle = (EditText) findViewById(R.id.post_title);
         mPostDesc = (EditText) findViewById(R.id.post_desc);
-
-        // Other references
-        mStorage = FirebaseStorage.getInstance().getReference();
         mProgress = new ProgressDialog(this);
 
-
-
+        // Firebase references
+        mStorage = FirebaseStorage.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Blog");
     }
 
 
@@ -79,8 +77,8 @@ public class NewPostActivity extends AppCompatActivity {
         mProgress.setMessage("Posting to Blog.....");
         mProgress.show();
 
-        String title_text = mPostTitle.getText().toString();
-        String desc_text = mPostDesc.getText().toString();
+        final String title_text = mPostTitle.getText().toString().trim();
+        final String desc_text = mPostDesc.getText().toString().trim();
 
         if (!TextUtils.isEmpty(title_text) && !TextUtils.isEmpty(desc_text) && imageUri != null) {
 
@@ -91,9 +89,15 @@ public class NewPostActivity extends AppCompatActivity {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                             Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                            mProgress.dismiss();
+
+                            DatabaseReference newPost = mDatabase.push();
+                            newPost.child("title").setValue(title_text);
+                            newPost.child("desc").setValue(desc_text);
+                            newPost.child("image").setValue(downloadUrl.toString());
 
                             Toast.makeText(NewPostActivity.this, "Successfully uploaded", Toast.LENGTH_SHORT).show();
+                            mProgress.dismiss();
+                            sendToMainActivity();
 
                         }
 
@@ -101,6 +105,12 @@ public class NewPostActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    private void sendToMainActivity() {
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(mainIntent);
     }
 
 

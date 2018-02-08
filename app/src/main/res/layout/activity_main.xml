@@ -11,4 +11,12 @@
         layout="@layout/app_bar_main"
         android:id="@+id/main_app_bar"/>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/mBlogList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/main_app_bar">
+
+    </android.support.v7.widget.RecyclerView>
+
 </RelativeLayout>

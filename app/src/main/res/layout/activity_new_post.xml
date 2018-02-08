@@ -18,6 +18,7 @@
         android:layout_height="200dp"
         android:layout_centerHorizontal="true"
         android:layout_margin="10dp"
+        android:scaleType="centerCrop"
         android:background="@drawable/round_edittext_shape"
         android:layout_below="@+id/new_post_bar"
         android:onClick="addImage"/>
